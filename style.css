@@ -3,9 +3,9 @@
     --body-bg: #f0f2f5;
     --container-bg: #ffffff;
     --section-bg: #f9f9f9;
-    --text-primary: #1c1e21; /* For headings and strong text */
-    --text-secondary: #333;  /* For general body text */
-    --text-muted: #606770;   /* For placeholders, subtitles, counts */
+    --text-primary: #1c1e21;
+    --text-secondary: #333;
+    --text-muted: #606770;
     --border-color: #e0e0e0;
     --input-bg: #ffffff;
     --input-text: #1c1e21;
@@ -23,9 +23,29 @@
     --theme-button-bg: #777;
     --theme-button-text: #fff;
     --theme-button-hover-bg: #555;
-    --logo-red-color: #D93535; /* A specific red, adjust as needed */
-    --logo-dark-color: #2D3748; /* A specific dark color, adjust as needed */
+    --logo-red-color: #D93535;
+    --logo-dark-color: #2D3748;
+    /* Shinier effect variables */
+    --container-shadow-color-soft: rgba(0, 0, 0, 0.07);
+    --container-shadow-color-defined: rgba(0, 0, 0, 0.04);
+    --button-hover-shadow-color: rgba(0,0,0,0.1);
+    --input-focus-inner-shine: rgba(0,0,0,0.08);
 }
+
+/* --- Utility Classes --- */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap; /* Added to prevent line breaks from affecting layout if it were visible */
+    border: 0;
+}
+
+/* ... rest of your existing style.css ... */
 
 /* Dark Theme */
 .theme-dark {
@@ -40,8 +60,7 @@
     --input-text: #e0e0e0;
     --input-placeholder: #777777;
     --input-border: #555555;
-    --focus-ring-color: rgba(0, 123, 255, 0.3);
-    --focus-border-color: #007bff; /* Keep focus blue for visibility or change if needed */
+    --focus-border-color: #007bff;
     --button-primary-bg: #007bff;
     --button-primary-text: #ffffff;
     --button-primary-hover-bg: #0056b3;
@@ -52,6 +71,11 @@
     --theme-button-bg: #aaa;
     --theme-button-text: #121212;
     --theme-button-hover-bg: #ccc;
+    /* Shinier effect variables for dark theme */
+    --container-shadow-color-soft: rgba(255, 255, 255, 0.05);
+    --container-shadow-color-defined: rgba(255, 255, 255, 0.03);
+    --button-hover-shadow-color: rgba(255,255,255,0.08);
+    --input-focus-inner-shine: rgba(255,255,255,0.06);
 }
 
 /* High Contrast Light Theme */
@@ -67,7 +91,6 @@
     --input-text: #000000;
     --input-placeholder: #333333;
     --input-border: #000000;
-    --focus-ring-color: rgba(0, 0, 0, 0.3);
     --focus-border-color: #000000;
     --button-primary-bg: #000000;
     --button-primary-text: #ffffff;
@@ -94,7 +117,7 @@
     --input-text: #ffffff;
     --input-placeholder: #cccccc;
     --input-border: #ffffff;
-    --focus-ring-color: rgba(255, 255, 0, 0.5); /* Yellow focus for high visibility */
+    --focus-ring-color: rgba(255, 255, 0, 0.5);
     --focus-border-color: #ffff00;
     --button-primary-bg: #ffffff;
     --button-primary-text: #000000;
@@ -107,7 +130,6 @@
     --theme-button-text: #000;
     --theme-button-hover-bg: #ddd;
 }
-
 
 /* General Styles using CSS Variables */
 body {
@@ -124,22 +146,36 @@ body {
 }
 
 .container {
-    background-color: var(--container-bg);
-    color: var(--text-secondary); /* Ensure container text color also uses variable */
+    background-image: linear-gradient(to bottom, 
+        var(--container-bg) 0%, 
+        color-mix(in srgb, var(--container-bg) 95%, var(--body-bg)) 100%
+    );
+    color: var(--text-secondary);
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px var(--container-shadow-color-soft),
+                  0 3px 8px var(--container-shadow-color-defined);
     width: 100%;
     max-width: 800px;
-    transition: background-color 0.3s;
+    transition: background-image 0.3s, box-shadow 0.3s;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
 
 /* --- Logo Styles --- */
 .logo-link {
-    text-decoration: none; /* Remove underline from link */
-    color: inherit; /* Inherit text color */
-    display: inline-block; /* Allow transform/positioning if needed */
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
 }
 
 .logo-header {
@@ -150,85 +186,58 @@ body {
 }
 
 .logo-icon-container {
-    margin-bottom: 8px; /* Space below icon */
+    margin-bottom: 8px;
 }
 
 .logo-icon {
-    width: 70px; /* Adjust size as needed */
+    width: 70px;
     height: 70px;
 }
 
-.logo-icon circle {
-    stroke: var(--logo-red-color, #EF4444); /* Use CSS variable, fallback to red */
-}
-
+.logo-icon circle,
 .logo-icon polyline {
-    stroke: var(--logo-red-color, #EF4444); /* Use CSS variable, fallback to red */
+    stroke: var(--logo-red-color);
 }
 
 .logo-text-container {
-    margin-bottom: 4px; /* Space below "Type" */
+    margin-bottom: 4px;
 }
 
 .logo-text-main {
-    font-size: 2.2em; /* Adjust size */
+    font-size: 2.2em;
     font-weight: bold;
-    color: var(--logo-dark-color, #1E293B); /* Use CSS variable, fallback to dark blue/black */
-    display: block; /* Ensure it's on its own line if "Type" is smaller */
+    color: var(--logo-dark-color);
+    display: block;
     line-height: 1;
 }
 
 .logo-text-secondary {
-    font-size: 1.8em; /* Adjust size */
-    color: var(--logo-red-color, #EF4444); /* Use CSS variable, fallback to red */
+    font-size: 1.8em;
+    color: var(--logo-red-color);
     display: block;
     line-height: 1;
-    margin-top: -0.1em; /* Adjust vertical alignment with "TrueTest" */
+    margin-top: -0.1em;
 }
 
 .logo-tagline {
     font-size: 0.85em;
-    color: var(--text-muted); /* Use existing muted text color variable */
-    position: relative; /* For positioning the squiggly line */
-    padding-bottom: 8px; /* Space for the squiggly line */
+    color: var(--text-muted);
+    position: relative;
+    padding-bottom: 8px;
     margin-top: 6px;
 }
 
 .squiggly-underline {
     display: block;
-    width: 100%; /* Make SVG take full width of tagline */
-    height: 6px;  /* Height of the squiggly line */
+    width: 100%;
+    height: 6px;
     position: absolute;
     bottom: 0;
     left: 0;
 }
 
 .squiggly-underline path {
-    stroke: var(--logo-red-color, #EF4444);
-}
-
-/* Update header to accommodate logo and button */
-header {
-    display: flex;
-    justify-content: space-between; /* Space between logo and theme button */
-    align-items: center; /* Vertically align logo and button */
-    text-align: left; /* Reset text-align from previous if any */
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 20px; /* Increased padding */
-    padding-top: 10px;
-}
-
-.header-content h1 {
-    font-size: 28px;
-    color: var(--text-primary);
-    margin-bottom: 5px;
-}
-
-.header-content p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-top: 0;
+    stroke: var(--logo-red-color);
 }
 
 #theme-toggle-btn {
@@ -239,13 +248,7 @@ header {
     border: 1px solid var(--border-color);
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
 }
-
-#theme-toggle-btn:hover {
-    background-color: var(--theme-button-hover-bg);
-}
-
 
 .student-info, .document-editor {
     background-color: var(--section-bg);
@@ -278,7 +281,7 @@ header {
 
 .form-group label {
     font-size: 14px;
-    color: var(--text-primary); /* Make labels use primary text color */
+    color: var(--text-primary);
     margin-bottom: 6px;
     font-weight: 500;
 }
@@ -294,9 +297,8 @@ textarea#main-text {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 .form-group input[type="text"] {
-     width: calc(100% - 24px); /* Account for padding */
+     width: calc(100% - 24px);
 }
-
 
 .form-group input[type="text"]::placeholder,
 textarea#main-text::placeholder {
@@ -307,7 +309,8 @@ textarea#main-text::placeholder {
 textarea#main-text:focus {
     outline: none;
     border-color: var(--focus-border-color);
-    box-shadow: 0 0 0 2px var(--focus-ring-color);
+    box-shadow: 0 0 0 3px var(--focus-ring-color),
+                  0 1px 3px var(--input-focus-inner-shine) inset;
 }
 
 .editor-header {
@@ -343,7 +346,7 @@ footer {
     margin-top: 20px;
 }
 
-button { /* General button styling, specific buttons override */
+button {
     padding: 10px 18px;
     border: none;
     border-radius: 5px;
@@ -353,7 +356,16 @@ button { /* General button styling, specific buttons override */
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.2s ease-out, 
+                color 0.2s ease-out, 
+                transform 0.2s ease-out, 
+                box-shadow 0.2s ease-out,
+                border-color 0.2s ease-out;
+}
+
+button:hover, button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--button-hover-shadow-color);
 }
 
 button.primary-btn {
@@ -361,34 +373,79 @@ button.primary-btn {
     color: var(--button-primary-text);
 }
 
-button.primary-btn:hover {
+button.primary-btn:hover, button.primary-btn:focus-visible {
     background-color: var(--button-primary-hover-bg);
 }
 
 button.secondary-btn {
     background-color: var(--button-secondary-bg);
     color: var(--button-secondary-text);
-    border: 1px solid var(--button-secondary-border); /* Use variable for border */
+    border: 1px solid var(--button-secondary-border);
 }
 
-button.secondary-btn:hover {
+button.secondary-btn:hover, button.secondary-btn:focus-visible {
     background-color: var(--button-secondary-hover-bg);
 }
 
-/* SVG icon color for print button */
 button.secondary-btn svg {
-    fill: var(--button-secondary-text); /* Match text color */
-}
-.theme-dark button.secondary-btn svg {
     fill: var(--button-secondary-text);
 }
-.theme-high-contrast-light button.secondary-btn svg {
-    fill: var(--button-secondary-text);
-}
+/* Ensure SVG color adapts in themes if --button-secondary-text changes */
+.theme-dark button.secondary-btn svg,
+.theme-high-contrast-light button.secondary-btn svg,
 .theme-high-contrast-dark button.secondary-btn svg {
     fill: var(--button-secondary-text);
 }
 
+/* --- SEO Content Section Styles --- */
+.seo-content {
+    margin-top: 40px;
+    padding-top: 30px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    font-size: 0.95em;
+}
+
+.seo-divider {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin-bottom: 30px;
+}
+
+.seo-content h2 {
+    font-size: 1.6em;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.seo-content h3 {
+    font-size: 1.25em;
+    color: var(--text-primary);
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.seo-content p {
+    margin-bottom: 1.2em;
+    text-align: justify;
+}
+
+.seo-content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 1.5em;
+    padding-left: 15px;
+}
+
+.seo-content li {
+    margin-bottom: 0.8em;
+}
+
+.seo-content li strong {
+    color: var(--text-primary);
+}
 
 @media (max-width: 600px) {
     header {
@@ -397,7 +454,7 @@ button.secondary-btn svg {
     }
     #theme-toggle-btn {
         margin-top: 10px;
-        width: 100%; /* Make theme button full width on small screens */
+        width: 100%;
     }
     .form-row {
         flex-direction: column;
@@ -406,13 +463,10 @@ button.secondary-btn svg {
     .container {
         padding: 20px;
     }
-    .header-content h1 {
-        font-size: 24px;
-    }
     footer {
         flex-direction: column;
     }
-    footer button { /* Buttons in footer */
+    footer button {
         width: 100%;
         justify-content: center;
     }

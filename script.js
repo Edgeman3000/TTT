@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const printBtn = document.getElementById('print-btn');
     const saveBtn = document.getElementById('save-btn');
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    // Removed: const startWritingBtn = document.getElementById('start-writing-btn');
 
     // --- Local Storage Settings for Exam Data ---
     const EXAM_DATA_STORAGE_KEY = 'examEditorData';
@@ -20,17 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function to Apply Theme ---
     function applyTheme(themeClass) {
-        document.body.classList.remove(...themes); // Remove any existing theme classes
-        if (themeClass !== 'theme-light') { // 'theme-light' is default, no class needed unless explicitly set
+        document.body.classList.remove(...themes);
+        if (themeClass !== 'theme-light') {
             document.body.classList.add(themeClass);
         }
         localStorage.setItem(THEME_STORAGE_KEY, themeClass);
-        // Update currentThemeIndex based on the applied theme
         currentThemeIndex = themes.indexOf(themeClass);
-        if (themeToggleBtn) {
-            // Optional: Update button text to reflect current or next theme
-            // For simplicity, we'll keep "Change Theme"
-        }
     }
 
     // --- Function to Load Theme ---
@@ -51,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- Load initial theme ---
-    loadTheme();
-
+    loadTheme(); // Load initial theme
 
     // --- Function to Save Exam Data to Local Storage ---
     function saveExamDataToLocalStorage() {
@@ -78,10 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const storedData = JSON.parse(storedDataString);
                 const currentTime = Date.now();
                 if (storedData.timestamp && (currentTime - storedData.timestamp < EXPIRATION_MS)) {
-                    studentNameInput.value = storedData.studentName || '';
-                    examNumberInput.value = storedData.examNumber || '';
-                    textArea.value = storedData.mainText || '';
-                    textArea.dispatchEvent(new Event('input'));
+                    if(studentNameInput) studentNameInput.value = storedData.studentName || '';
+                    if(examNumberInput) examNumberInput.value = storedData.examNumber || '';
+                    if(textArea) {
+                        textArea.value = storedData.mainText || '';
+                        textArea.dispatchEvent(new Event('input')); // Trigger word count update
+                    }
                 } else {
                     localStorage.removeItem(EXAM_DATA_STORAGE_KEY);
                 }
@@ -99,12 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (textArea) {
         textArea.addEventListener('input', () => {
-            saveExamDataToLocalStorage(); // Save exam data first
+            saveExamDataToLocalStorage(); 
             // Update word/char count
             const text = textArea.value;
-            charCountSpan.textContent = `${text.length} characters`;
+            if(charCountSpan) charCountSpan.textContent = `${text.length} characters`;
             const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-            wordCountSpan.textContent = text.length === 0 ? `0 words` : `${words.length} words`;
+            if(wordCountSpan) wordCountSpan.textContent = text.length === 0 ? `0 words` : `${words.length} words`;
         });
     } else {
          if (wordCountSpan || charCountSpan) {
@@ -112,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Removed: Event Listener for "Start Writing" Button 
 
     // --- Print Button Functionality ---
     if (printBtn && studentNameInput && examNumberInput && textArea) {
@@ -150,30 +147,34 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { document.body.removeChild(iframe); }, 500);
         });
     } else {
-        console.error("One or more elements for printing not found.");
+        // console.error("One or more elements for printing not found."); // Reduced console noise
     }
 
     // --- Save as Text File Button Functionality ---
     if (saveBtn && textArea && studentNameInput && examNumberInput) {
         saveBtn.addEventListener('click', () => {
-            const studentName = studentNameInput.value.trim() || "student";
-            const examNumber = examNumberInput.value.trim() || "exam";
+            const studentNameVal = studentNameInput.value || "student"; // Use .value
+            const examNumberVal = examNumberInput.value || "exam";   // Use .value
+            
             let textToSave = `Student Name: ${studentNameInput.value}\n`;
             textToSave += `Exam Number: ${examNumberInput.value}\n\n`;
             textToSave += `-------------------------------------\n\n`;
             textToSave += textArea.value;
+            
             const blob = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            const safeStudentName = studentName.replace(/[^a-z0-9_.-]/gi, '_');
-            const safeExamNumber = examNumber.replace(/[^a-z0-9_.-]/gi, '_');
+            
+            const safeStudentName = studentNameVal.trim().replace(/[^a-z0-9_.-]/gi, '_');
+            const safeExamNumber = examNumberVal.trim().replace(/[^a-z0-9_.-]/gi, '_');
             link.download = `${safeStudentName}_${safeExamNumber}_exam_answer.txt`;
+            
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(link.href);
         });
     } else {
-        console.error("One or more elements for saving not found.");
+        // console.error("One or more elements for saving not found."); // Reduced console noise
     }
 });

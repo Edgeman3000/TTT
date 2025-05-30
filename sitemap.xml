@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://truetesttype.com/</loc>
+    <lastmod>2025-05-30</lastmod> <!-- IMPORTANT: Change this to the date you last made significant updates -->
+    <changefreq>monthly</changefreq> <!-- How frequently the page is likely to change: always, hourly, daily, weekly, monthly, yearly, never -->
+    <priority>1.0</priority> <!-- Priority of this URL relative to other URLs on your site (0.0 to 1.0) -->
+  </url>
+</urlset>
